@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Image Resizer - Resize Photos Online</title>
+<meta name="description" content="Free online image resizer. Resize photos to any width and height right in your browser. No sign-up, no uploads, nothing to pay.">
+<h1>Free Image Resizer</h1>
+<input type="file" id="picker" accept="image/*">
+<br>
+<img id="preview" style="max-width: 400px;">
+<br>
+Width: <input type="number" id="w" value="800">
+Height: <input type="number" id="h" value="600">
+<button id="go">Resize and download</button>
+
+<script>
+  const picker = document.getElementById("picker");
+  const preview = document.getElementById("preview");
+
+  picker.addEventListener("change", function () {
+    preview.src = URL.createObjectURL(picker.files[0]);
+  });
+
+  const go = document.getElementById("go");
+
+  go.addEventListener("click", function () {
+    const canvas = document.createElement("canvas");
+    canvas.width = document.getElementById("w").value;
+    canvas.height = document.getElementById("h").value;
+    const ctx = canvas.getContext("2d");
+	ctx.imageSmoothingQuality = "high";
+	ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/jpeg", 0.9);
+    link.download = "resized.jpg";
+    link.click();
+  });
+    const wBox = document.getElementById("w");
+  const hBox = document.getElementById("h");
+
+  wBox.addEventListener("input", function () {
+  	if (!preview.naturalWidth) return;
+  	hBox.value = Math.round(wBox.value * preview.naturalHeight / preview.naturalWidth);
+  });
+
+  hBox.addEventListener("input", function () {
+    wBox.value = Math.round(hBox.value * preview.naturalWidth / preview.naturalHeight);
+  });
+  
+</script>
